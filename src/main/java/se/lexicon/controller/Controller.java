@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 // Controller class responsible for controlling the flow of the application
-public class Controller {
+public class Controller implements IController {
     private ConsoleUI consoleUI; // Instance of ConsoleUI for user interaction
     private ParkingSpotDao parkingSpotDao; // Data access object for ParkingSpot entities
     private CustomerDao customerDao; // Data access object for Customer entities
@@ -28,23 +28,24 @@ public class Controller {
         reservationDao = ReservationDaoImpl.getInstance();
     }
 
-    public void start() {
-        doCreateParkingSpots();
+    @Override
+    public void startApplication() {
+        createParkingSpots();
 
         while (true) {
             MainMenuAction action = consoleUI.displayMenu();
             switch (action) {
                 case DISPLAY:
-                    doDisplayAllParkingSpots();
+                    displayAllParkingSpots();
                     break;
                 case REGISTER:
-                    doRegisterCustomer();
+                    registerCustomer();
                     break;
                 case RESERVE:
-                    doReserveParkingSpot();
+                    reserveParkingSpot();
                     break;
                 case DISPLAY_AND_VACATE:
-                    doDisplayAndVacateReservedParking();
+                    displayAndVacateReservedParking();
                     break;
                 case EXIT:
                     System.exit(0);
@@ -53,7 +54,8 @@ public class Controller {
 
     }
 
-    public void doCreateParkingSpots() {
+    @Override
+    public void createParkingSpots() {
         // Create and add parking spots to the system
         for (int i = 0; i < 9; i++) {
             ParkingSpot parkingSpot = new ParkingSpot(i, 47001);
@@ -63,7 +65,8 @@ public class Controller {
         consoleUI.displaySuccessMessage("Parking spots created successfully.");
     }
 
-    public void doDisplayAllParkingSpots() {
+    @Override
+    public void displayAllParkingSpots() {
         List<ParkingSpot> parkingSpots = parkingSpotDao.findByAreaCode(47001);
 
         if (parkingSpots.isEmpty()) {
@@ -76,7 +79,8 @@ public class Controller {
     }
 
 
-    public void doRegisterCustomer() {
+    @Override
+    public void registerCustomer() {
         // Get customer data from the user
         Customer customerData = consoleUI.customerPrompt();
 
@@ -92,7 +96,8 @@ public class Controller {
     }
 
 
-    public void doReserveParkingSpot() {
+    @Override
+    public void reserveParkingSpot() {
         consoleUI.displayMessage("Enter your customer id:");
         int customerId = consoleUI.getNumber();
 
@@ -148,7 +153,8 @@ public class Controller {
     }
 
 
-    public void doDisplayAndVacateReservedParking() {
+    @Override
+    public void displayAndVacateReservedParking() {
         // Prompt user to enter customer id
         consoleUI.displayMessage("Enter your customer id:");
         int customerId = consoleUI.getNumber();

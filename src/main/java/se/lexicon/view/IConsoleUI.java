@@ -11,15 +11,26 @@ import java.util.Scanner;
 
 public interface IConsoleUI {
 
-    MainMenuAction displayMenu();
+    // Single Scanner instance
+    Scanner SCANNER = new Scanner(System.in);
 
     default int getNumber() {
-        return new Scanner(System.in).nextInt();
+        while (true) {
+            try {
+                System.out.print("Enter a number: ");
+                return Integer.parseInt(SCANNER.nextLine());
+            } catch (NumberFormatException e) {
+                displayErrorMessage("Invalid number. Please try again.");
+            }
+        }
     }
 
     default String getString() {
-        return new Scanner(System.in).nextLine();
+        System.out.print("Enter a string: ");
+        return SCANNER.nextLine();
     }
+
+    MainMenuAction displayMenu();
 
     ParkingSpot parkingSpotPrompt();
 
